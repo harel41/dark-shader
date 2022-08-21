@@ -14,6 +14,11 @@ int prValue2 = 0;
 int prValue3 = 0;
 int prValue4 = 0;
 
+int left;
+int right;
+int up;
+int down;
+
 float kp = 0.2;
 float ki = 0;
 float kd = 0.1;
@@ -39,15 +44,21 @@ void loop() {
 
   prValue1 = analogRead(prPin1);
   prValue2 = analogRead(prPin2);
+  prValue3 = analogRead(prPin3);
+  prValue4 = analogRead(prPin4);
+
+  left = prValue1 +prValue3;
+  right = prValue2 +prValue4;
   
-  Serial.print(prValue1);
+  
+  Serial.print(left);
   Serial.print("\t");
-  Serial.print(prValue2);
+  Serial.print(right);
   Serial.print("\n");
 
   // PID חישובי
 
-  error = (prValue2 - prValue1);
+  error = (right - left);
 
   sum_error += error;
   
