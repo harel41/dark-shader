@@ -20,7 +20,7 @@ int up;
 int down;
 
 float kp = 0.2;
-float ki = 0;
+float ki = 0.001;
 float kd = 0.1;
 
 int error;
@@ -49,12 +49,18 @@ void loop() {
 
   left = prValue1 +prValue3;
   right = prValue2 +prValue4;
+  up = prValue4 + prValue1;
+  down = prValue2 + prValue3;
   
   
   Serial.print(left);
   Serial.print("\t");
   Serial.print(right);
   Serial.print("\n");
+  Serial.print(up);
+  Serial.print("\t");
+  Serial.print(down);
+  Serial.print("\t");
 
   // PID חישובי
 
@@ -67,5 +73,7 @@ void loop() {
   servo.write((error*kp + sum_error*ki + de*kd) + 45);
 
   last_error = error;
+
+  
 
 }
