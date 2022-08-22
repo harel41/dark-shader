@@ -1,0 +1,110 @@
+#include <Servo.h>
+
+// יצירת משתנים 
+
+Servo servo;
+Servo servoY;
+
+
+int prPin1 = A0;
+int prPin2 = A1;
+int prPin3 = A2;
+int prPin4 = A3;
+
+int prValue1 = 0;
+int prValue2 = 0;
+int prValue3 = 0;
+int prValue4 = 0;
+
+int left;
+int right;
+int up;
+int down;
+
+float kp = 0.2;
+float ki = 0.001;
+float kd = 0.1;
+
+float kpY = 0;
+float kiY = 0;
+float kdY = 0.;
+
+
+int error;
+int errorY;
+
+
+int sum_error;
+int sum_errorY;
+
+int last_error;
+int last_errorY;
+
+int de;
+int deY;
+
+
+void setup() {
+  // מתחיל תקשור עם מחשב ומתחבר למנוע
+  
+  Serial.begin(9600);
+  servo.attach(9);
+
+
+  servoY.attach(7);
+
+           
+     
+}
+
+void loop() {
+  
+  // קורא מהחיישנים ומדפיס למחשב
+
+  prValue1 = analogRead(prPin1);
+  prValue2 = analogRead(prPin2);
+  prValue3 = analogRead(prPin3);
+  prValue4 = analogRead(prPin4);
+
+  left = prValue1 +prValue3;
+  right = prValue2 +prValue4;
+  up = prValue4 + prValue1;
+  down = prValue2 + prValue3;
+  
+  
+  Serial.print(left);
+  Serial.print("\t");
+  Serial.print(right);
+  Serial.print("\n");
+  Serial.print(up);
+  Serial.print("\t");
+  Serial.print(down);
+  Serial.print("\t");
+
+  // PID חישובי
+
+  error = (right - left);
+
+  sum_error += error;
+  
+  de = error - last_error;
+
+  servo.write((error*kp + sum_error*ki + de*kd) + 45);
+
+  last_error = error;
+
+
+
+  errorY = (up - down);
+
+  sum_errorY += errorY;
+  
+  deY = errorY - last_errorY;
+
+  servoY.write((errorY*kpY + sum_errorY*kiY + deY*kdY) );
+
+  last_errorY = errorY;
+
+  
+
+}
